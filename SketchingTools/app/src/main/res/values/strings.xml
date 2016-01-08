@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SketchingTools</string>
+
+    <!-- 宝贝寻家 -->
+    <string name="baby_go_home">宝贝寻家</string>
+    <string name="back">返回</string>
 </resources>
