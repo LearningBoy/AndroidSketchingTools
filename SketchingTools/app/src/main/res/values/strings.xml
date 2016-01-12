@@ -4,4 +4,19 @@
     <!-- 宝贝寻家 -->
     <string name="baby_go_home">宝贝寻家</string>
     <string name="back">返回</string>
+    <string name="open_camera_or_open_picure">拍照</string>
+    
+    <string name="choose_picture">选择图形</string>
+    <string name="do_something">操作</string>
+    <string name="find_home">寻家</string>
+
+    <string name="open_camera">打开相机</string>
+    <string name="open_picture">打开相册</string>
+    <string name="cancal">取消</string>
+
+    <string name="road">道路</string>
+    <string name="building">建筑</string>
+    <string name="bridge">桥梁</string>
+    <string name="river">河流</string>
+    <string name="design">自定义</string>
 </resources>

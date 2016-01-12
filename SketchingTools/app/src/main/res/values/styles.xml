@@ -8,5 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-
+    <style name="popup_window_for_picture">
+        <!-- 指定显示动画-->
+        <item name="android:windowEnterAnimation">@anim/popup_window_show</item>
+        <!-- 指定隐藏动画-->
+        <item name="android:windowExitAnimation">@anim/popup_window_hidden</item>
+    </style>
 </resources>
