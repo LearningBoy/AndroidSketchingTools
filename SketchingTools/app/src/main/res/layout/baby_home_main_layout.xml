@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/baby_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:padding="3dp">
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_style"
+            android:text="@string/back"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:gravity="center"
+            android:text="@string/baby_go_home"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/open_camera_or_open_picture"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_style"
+            android:text="@string/open_camera_or_open_picure"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <cug.school.sketchingtools.common.DrawSketchView
+            android:id="@+id/draw_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#f5f5f5f5" />
+
+        <LinearLayout
+            android:id="@+id/operation_linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/back_style"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/undo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/back_style"
+                android:text="@string/undo"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/reset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/back_style"
+                android:text="@string/reset"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <TabHost
+            android:id="@+id/tab_host"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="#FFFFFF" />
+
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#F5F5F5F5">
+
+                    <!-- 道路视图-->
+                    <GridView
+                        android:id="@+id/road_gridView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:numColumns="4" />
+
+                    <!-- 桥梁视图-->
+                    <GridView
+                        android:id="@+id/bridge_gridView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:numColumns="4" />
+
+                    <!-- 建筑视图-->
+                    <GridView
+                        android:id="@+id/building_gridView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:numColumns="4" />
+
+                    <!-- 河流视图-->
+                    <GridView
+                        android:id="@+id/river_gridView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:numColumns="4" />
+
+                    <!-- 自定义视图-->
+                    <GridView
+                        android:id="@+id/design_gridView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:numColumns="4" />
+                </FrameLayout>
+            </LinearLayout>
+        </TabHost>
+
+        <TextView
+            android:id="@+id/xml_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:padding="3dp">
+
+        <Button
+            android:id="@+id/choose_picture"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/back_style"
+            android:text="@string/choose_picture"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/operation_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/back_style"
+            android:text="@string/do_something"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/find_home"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/back_style"
+            android:text="@string/find_home"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</LinearLayout>

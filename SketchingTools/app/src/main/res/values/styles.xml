@@ -1,6 +1,6 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- 整体主题 -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -8,10 +8,22 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- -->
+    <style name="myTheme.actionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="actionBarSize">@dimen/actionBarSize</item>
+    </style>
+
+    <!-- -->
+    <style name="myTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="actionBarTheme">@style/myTheme.actionBar</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="actionBarSize">@dimen/actionBarSize</item>
+    </style>
+
+    <!-- PopWindow动画 -->
     <style name="popup_window_for_picture">
-        <!-- 指定显示动画-->
         <item name="android:windowEnterAnimation">@anim/popup_window_show</item>
-        <!-- 指定隐藏动画-->
         <item name="android:windowExitAnimation">@anim/popup_window_hidden</item>
     </style>
 </resources>
