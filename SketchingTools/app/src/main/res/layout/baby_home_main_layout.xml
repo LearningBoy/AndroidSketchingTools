@@ -112,7 +112,9 @@
                         android:id="@+id/road_gridView"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:numColumns="4" />
+                        android:horizontalSpacing="10dp"
+                        android:numColumns="4"
+                        android:verticalSpacing="10dp" />
 
                     <!-- 桥梁视图-->
                     <GridView

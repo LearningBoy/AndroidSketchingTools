@@ -1,10 +1,16 @@
 package cug.school.sketchingtools.common;
 
+import android.graphics.Point;
+import android.util.Log;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -23,7 +29,7 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class XmlSave {
 
-    public String Save_as_XmlString(int id, String notes, String type) {
+    public String Save_as_XmlString(int id, String notes, String type, ArrayList<ArrayList<Point>> allPoint) {
         String xmlString = "";
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -44,18 +50,31 @@ public class XmlSave {
             //二级标签，文档时间
             Element xmlTime = document.createElement("time");
             rootElement.appendChild(xmlTime);
-            xmlTime.appendChild(document.createTextNode("time"));
-            //二级标签，实体
-            Element xmlEntities = document.createElement("entity");
-            rootElement.appendChild(xmlEntities);
-            //三级标签，实体类型
-            Element entityType = document.createElement("type");
-            xmlEntities.appendChild(entityType);
-            entityType.appendChild(document.createTextNode(type));
-            //三级标签，实体坐标
-            Element entityPoint = document.createElement("point");
-            xmlEntities.appendChild(entityPoint);
-            entityPoint.appendChild(document.createTextNode(""));
+            //获取系统当前时间
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日-HH:mm:ss");
+            Date curDate = new Date(System.currentTimeMillis());
+            String currentTime = formatter.format(curDate);
+            xmlTime.appendChild(document.createTextNode(currentTime));
+            //用户绘制实体的个数
+            int n = allPoint.size();
+            for (int i = 0; i < n; i++) {
+                //二级标签，实体
+                Element xmlEntities = document.createElement("entity");
+                rootElement.appendChild(xmlEntities);
+                //三级标签，实体类型
+                Element entityType = document.createElement("type");
+                xmlEntities.appendChild(entityType);
+                entityType.appendChild(document.createTextNode(type));
+                //当前实体拥有的点个数
+                int m = (allPoint.get(i)).size();
+                for (int j = 0; j < m; j++) {
+                    //三级标签，实体坐标
+                    Element entityPoint = document.createElement("point");
+                    xmlEntities.appendChild(entityPoint);
+                    Point point = allPoint.get(i).get(j);
+                    entityPoint.appendChild(document.createTextNode("x=" + point.x + ",y=" + point.y));
+                }
+            }
 
             //格式转换工厂,将xml转换为String类型
             TransformerFactory factory = TransformerFactory.newInstance();
@@ -79,7 +98,7 @@ public class XmlSave {
             OutputStream outputStream = new ByteArrayOutputStream();
             //字节输出结果
             StreamResult streamResult = new StreamResult(outputStream);
-            //转换doucunmen对象
+            //转换document对象
             transformer.transform(domSource, streamResult);
             //从ByteArrayOutputStream对象获取String对象
             xmlString = outputStream.toString();

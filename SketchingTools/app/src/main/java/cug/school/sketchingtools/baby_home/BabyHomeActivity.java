@@ -1,7 +1,6 @@
 package cug.school.sketchingtools.baby_home;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -14,18 +13,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.SimpleAdapter;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import cug.school.sketchingtools.R;
 import cug.school.sketchingtools.common.DrawSketchView;
+import cug.school.sketchingtools.common.GridViewAdapter;
 import cug.school.sketchingtools.common.XmlSave;
 import cug.school.sketchingtools.popwindows.PopWindowForPicture;
 
@@ -41,7 +35,6 @@ public class BabyHomeActivity extends Activity {
     /**
      * 图形选择按钮相关字段
      */
-    private int[] images = {R.drawable.pic_test};
     private TabHost tabHost;
     private Boolean TAG = false;
 
@@ -127,9 +120,23 @@ public class BabyHomeActivity extends Activity {
             TextView textView = (TextView) view.findViewById(android.R.id.title);
             textView.setTextSize(15);
         }
-        //加载GridView
-        GridView gridView = (GridView) findViewById(R.id.road_gridView);
-        gridView.setAdapter(getAdapter());
+
+        //加载道路GridView
+        GridView roadGridView = (GridView) findViewById(R.id.road_gridView);
+        GridViewAdapter roadAdapter = new GridViewAdapter(this);
+        roadAdapter.setTAG("ROAD");
+        roadGridView.setAdapter(roadAdapter);
+        //加载桥梁GridView
+        GridView bridgeGridView = (GridView) findViewById(R.id.bridge_gridView);
+        GridViewAdapter bridgeAdapter = new GridViewAdapter(this);
+        bridgeAdapter.setTAG("BRIDGE");
+        bridgeGridView.setAdapter(bridgeAdapter);
+        //加载建筑GridView
+        GridView buildingGridView = (GridView) findViewById(R.id.building_gridView);
+        GridViewAdapter buildingAdapter = new GridViewAdapter(this);
+        buildingAdapter.setTAG("BUILDING");
+        buildingGridView.setAdapter(buildingAdapter);
+
         //操作按钮
         Button OperationButton = (Button) findViewById(R.id.operation_button);
         OperationButton.setOnClickListener(new View.OnClickListener() {
@@ -179,7 +186,7 @@ public class BabyHomeActivity extends Activity {
             public void onClick(View v) {
                 TextView XmlContentView = (TextView) findViewById(R.id.xml_content);
                 XmlSave xmlSave = new XmlSave();
-                XmlContentView.setText(xmlSave.Save_as_XmlString(1,"123456","test"));
+                XmlContentView.setText(xmlSave.Save_as_XmlString(1, "123456", "test", ((DrawSketchView) findViewById(R.id.draw_view)).getAllPoint()));
                 int i = XmlContentView.getVisibility();
                 switch (i) {
                     case View.VISIBLE:
@@ -211,19 +218,6 @@ public class BabyHomeActivity extends Activity {
         }
     };
 
-    private ListAdapter getAdapter() {
-        List<HashMap<String, Object>> data = new ArrayList<>();
-        for (int i : images) {
-            HashMap<String, Object> item = new HashMap<>();
-            item.put("image", i);
-            data.add(item);
-        }
-        SimpleAdapter simpleAdapter = new SimpleAdapter(BabyHomeActivity.this, data,
-                R.layout.graphoc_item, new String[]{"image"},
-                new int[]{R.id.graphic_image});
-        return simpleAdapter;
-    }
-
     //从相机获得照片
     private void getImageFromCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -245,29 +239,13 @@ public class BabyHomeActivity extends Activity {
         }
         ((DrawSketchView) findViewById(R.id.draw_view)).Recycle();
         Uri uri = data.getData();
-        switch (requestCode) {
-            case OPEN_CAMERA_CODE:
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    if (bitmap != null) {
-                        ((DrawSketchView) findViewById(R.id.draw_view)).setBitmap(bitmap, "CAMERA");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case OPEN_ALBUM_CODE:
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    if (bitmap != null) {
-                        ((DrawSketchView) findViewById(R.id.draw_view)).setBitmap(bitmap, "ALBUM");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                break;
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            if (bitmap != null) {
+                ((DrawSketchView) findViewById(R.id.draw_view)).setBitmap(bitmap);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
