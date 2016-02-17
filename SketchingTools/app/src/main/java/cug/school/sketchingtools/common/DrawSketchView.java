@@ -35,13 +35,19 @@ public class DrawSketchView extends View {
     private Path path;
     //声明存储当前点的数组
     private ArrayList<Point> pointArrayList = new ArrayList<>();
+    //声明当前点数组大小
+    int pointSize = 0;
+    //点数组中画线的开始点
+    private Point startPoint = null;
+    //点数组中画线的结束点
+    private Point endPoint = null;
     //标识，用于判断撤销和重置
     private String TAG = " ";
     //记录图片添加时的序号
     private int ImageNumber;
     //图片的尺寸
     private Rect ImageRect;
-    //屏幕的尺寸
+    //当前视图的尺寸
     private RectF ScreenRect;
 
     public DrawSketchView(Context context, AttributeSet attrs) {
@@ -92,15 +98,19 @@ public class DrawSketchView extends View {
         }
 
         //当前点数组的大小
-        int pointSize = pointArrayList.size();
+        pointSize = pointArrayList.size();
         if (pointSize != 0) {
             for (int i = 0, j = 1; j < pointSize; i++, j++) {
-                Point startPoint = pointArrayList.get(i);
-                Point endPoint = pointArrayList.get(j);
+                startPoint = pointArrayList.get(i);
+                endPoint = pointArrayList.get(j);
                 canvas.drawLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y, paint);
             }
+        }else {
+            startPoint = null;
+            endPoint = null;
         }
 
+        //画出之前的路径
         int pathSize = pathArrayList.size();
         switch (TAG) {
             case "UNDO":
@@ -138,6 +148,7 @@ public class DrawSketchView extends View {
         TAG = "UNDO";
         if (ImageNumber == pathArrayList.size()) {
             Flag = false;
+            Recycle();
         }
         invalidate();
     }
@@ -147,6 +158,7 @@ public class DrawSketchView extends View {
         TAG = "RESET";
         Flag = false;
         ImageNumber = 0;
+        Recycle();
         invalidate();
     }
 
@@ -154,8 +166,16 @@ public class DrawSketchView extends View {
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
         this.ImageNumber = pathArrayList.size();
-        this.ImageRect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        this.ScreenRect = new RectF(0, 0, getWidth(), getHeight());
+        //获得图片的宽高
+        int Bitmap_Width = bitmap.getWidth();
+        int Bitmap_Height = bitmap.getHeight();
+        //设置要变换的图片信息
+        this.ImageRect = new Rect(0, 0, Bitmap_Width, Bitmap_Height);
+        //获得当前控件的宽高
+        int View_Width = this.getWidth();
+        int View_Height = this.getHeight();
+        //设置图片要匹配的空间信息
+        this.ScreenRect = new RectF(0, 0, View_Width, View_Height);
         Flag = true;
         invalidate();
     }
@@ -163,6 +183,8 @@ public class DrawSketchView extends View {
     public void Recycle() {
         if (bitmap != null) {
             bitmap.recycle();
+            bitmap = null;
+            System.gc();
         }
     }
 

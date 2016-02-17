@@ -1,9 +1,12 @@
 package cug.school.sketchingtools.baby_home;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,6 +26,9 @@ import cug.school.sketchingtools.common.GridViewAdapter;
 import cug.school.sketchingtools.common.XmlSave;
 import cug.school.sketchingtools.popwindows.PopWindowForPicture;
 
+/**
+ * 宝贝寻家主界面
+ */
 public class BabyHomeActivity extends Activity {
 
     /**
@@ -118,7 +124,7 @@ public class BabyHomeActivity extends Activity {
         for (int i = 0; i < tabWidget.getTabCount(); i++) {
             View view = tabWidget.getChildAt(i);
             TextView textView = (TextView) view.findViewById(android.R.id.title);
-            textView.setTextSize(15);
+            textView.setTextSize(13);
         }
 
         //加载道路GridView
@@ -232,21 +238,57 @@ public class BabyHomeActivity extends Activity {
         startActivityForResult(intent, OPEN_ALBUM_CODE);
     }
 
+    //打开相机和相册的返回函数
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == 1) {
             return;
         }
         ((DrawSketchView) findViewById(R.id.draw_view)).Recycle();
-        Uri uri = data.getData();
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            if (bitmap != null) {
-                ((DrawSketchView) findViewById(R.id.draw_view)).setBitmap(bitmap);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String picture_path = getRealPicturePath(data.getData());
+        ((DrawSketchView) findViewById(R.id.draw_view)).setBitmap(compressBitmap(findViewById(R.id.draw_view), picture_path));
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    //将图片的Uri路径转换为绝对路径String类型
+    private String getRealPicturePath(Uri uri) {
+        String pic_Path = null;
+        String scheme = uri.getScheme();
+        if (scheme == null) {
+            pic_Path = uri.getPath();
+        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            pic_Path = uri.getPath();
+        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            Cursor cursor = this.getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                    if (index > -1) {
+                        pic_Path = cursor.getString(index);
+                    }
+                }
+                cursor.close();
+            }
+        }
+        return pic_Path;
+    }
+
+    //返回经过压缩的照片
+    private Bitmap compressBitmap(View view, String path) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        //只得到属性信息，不加载Bitmap到内存中
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        //获得原始照片的宽高
+        int Bitmap_Width = options.outWidth;
+        int Bitmap_Height = options.outHeight;
+        //获得控件的宽高
+        int View_Width = view.getWidth();
+        int View_Height = view.getHeight();
+        //设置照片的压缩比例,取最大比例，保证整个图片可以显示在View控件中
+        options.inSampleSize = Math.max(Bitmap_Width / View_Width, Bitmap_Height / View_Height);
+        //inJustDecodeBounds设置为false，加载Bitmap到内存中
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(path, options);
     }
 }

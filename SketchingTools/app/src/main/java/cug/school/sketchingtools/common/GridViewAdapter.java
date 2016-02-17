@@ -10,6 +10,7 @@ import cug.school.sketchingtools.R;
 
 /**
  * Created by Mr_Bai on 2016/1/20.
+ * 图形选择的适配器
  */
 public class GridViewAdapter extends BaseAdapter {
 

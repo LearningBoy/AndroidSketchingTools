@@ -14,6 +14,7 @@ import cug.school.sketchingtools.R;
 
 /**
  * Created by Mr_Bai on 2016/1/19.
+ * 添加标签界面
  */
 public class AddNotesActivity extends Activity {
 

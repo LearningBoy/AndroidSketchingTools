@@ -1,7 +1,6 @@
 package cug.school.sketchingtools.common;
 
 import android.graphics.Point;
-import android.util.Log;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -26,6 +25,7 @@ import javax.xml.transform.stream.StreamResult;
 
 /**
  * Created by Mr_Bai on 2016/1/18.
+ * 将用户绘制的图形保存为xml格式文件
  */
 public class XmlSave {
 
