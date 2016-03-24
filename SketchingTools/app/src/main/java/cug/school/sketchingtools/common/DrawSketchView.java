@@ -25,7 +25,8 @@ public class DrawSketchView extends View {
     //标志位，用于判断是否重绘bitmap
     private boolean Flag = false;
     //声明画笔
-    private Paint paint = new Paint();
+    private Paint paint_red = new Paint();
+    private Paint paint_black = new Paint();
 
     //保存所有的点,用于在xml文件中展示
     private ArrayList<ArrayList<Point>> allPointArrayList = new ArrayList<>();
@@ -49,6 +50,9 @@ public class DrawSketchView extends View {
     private Rect ImageRect;
     //当前视图的尺寸
     private RectF ScreenRect;
+
+    //根据时间改变线条颜色
+    long currentTime = System.currentTimeMillis();
 
     public DrawSketchView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -94,7 +98,7 @@ public class DrawSketchView extends View {
 
         //画图
         if (Flag) {
-            canvas.drawBitmap(bitmap, ImageRect, ScreenRect, paint);
+            canvas.drawBitmap(bitmap, ImageRect, ScreenRect, paint_black);
         }
 
         //当前点数组的大小
@@ -103,9 +107,9 @@ public class DrawSketchView extends View {
             for (int i = 0, j = 1; j < pointSize; i++, j++) {
                 startPoint = pointArrayList.get(i);
                 endPoint = pointArrayList.get(j);
-                canvas.drawLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y, paint);
+                canvas.drawLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y, paint_black);
             }
-        }else {
+        } else {
             startPoint = null;
             endPoint = null;
         }
@@ -123,7 +127,7 @@ public class DrawSketchView extends View {
                         pathSize--;
                     }
                     for (int i = 0; i < pathSize; i++) {
-                        canvas.drawPath(pathArrayList.get(i), paint);
+                        canvas.drawPath(pathArrayList.get(i), paint_black);
                     }
                 }
                 break;
@@ -136,7 +140,7 @@ public class DrawSketchView extends View {
             default:
                 //如果路径数组不为空，则绘制当前路径
                 for (int i = 0; i < pathSize; i++) {
-                    canvas.drawPath(pathArrayList.get(i), paint);
+                    canvas.drawPath(pathArrayList.get(i), paint_black);
                 }
                 break;
         }
@@ -192,20 +196,27 @@ public class DrawSketchView extends View {
      * 设置画笔的风格
      */
     private void paintStyle() {
-        //画笔颜色为黑色
-        paint.setColor(Color.BLACK);
+        //画笔颜色为黑色/红色
+        paint_black.setColor(Color.BLACK);
+        paint_red.setColor(Color.RED);
         //画笔宽度为20
-        paint.setStrokeWidth(20.0f);
+        paint_black.setStrokeWidth(20.0f);
+        paint_red.setStrokeWidth(20.0f);
         //抗锯齿
-        paint.setAntiAlias(true);
+        paint_black.setAntiAlias(true);
+        paint_red.setAntiAlias(true);
         //防抖动
-        paint.setDither(true);
+        paint_black.setDither(true);
+        paint_red.setDither(true);
         //画笔类型为实线
-        paint.setStyle(Paint.Style.STROKE);
+        paint_black.setStyle(Paint.Style.STROKE);
+        paint_red.setStyle(Paint.Style.STROKE);
         //画笔交汇点为圆形
-        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint_black.setStrokeJoin(Paint.Join.ROUND);
+        paint_red.setStrokeJoin(Paint.Join.ROUND);
         //画笔两端为圆形
-        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint_black.setStrokeCap(Paint.Cap.ROUND);
+        paint_red.setStrokeCap(Paint.Cap.ROUND);
     }
 
     /**

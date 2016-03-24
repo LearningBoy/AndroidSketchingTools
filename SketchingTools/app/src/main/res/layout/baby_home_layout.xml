@@ -113,7 +113,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:horizontalSpacing="10dp"
-                        android:numColumns="4"
+                        android:numColumns="5"
                         android:verticalSpacing="10dp" />
 
                     <!-- 桥梁视图-->
@@ -121,28 +121,28 @@
                         android:id="@+id/bridge_gridView"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:numColumns="4" />
+                        android:numColumns="5" />
 
                     <!-- 建筑视图-->
                     <GridView
                         android:id="@+id/building_gridView"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:numColumns="4" />
+                        android:numColumns="5" />
 
                     <!-- 河流视图-->
                     <GridView
                         android:id="@+id/river_gridView"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:numColumns="4" />
+                        android:numColumns="5" />
 
                     <!-- 自定义视图-->
                     <GridView
                         android:id="@+id/design_gridView"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:numColumns="4" />
+                        android:numColumns="5" />
                 </FrameLayout>
             </LinearLayout>
         </TabHost>

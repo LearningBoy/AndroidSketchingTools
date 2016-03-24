@@ -1,18 +1,26 @@
 <resources>
-    <string name="app_name">SketchingTools</string>
+    <string name="app_name">点点画</string>
+
+    <!-- 权限获取 start -->
+    <string name="permission_title_rationale">授予权限</string>
+    <string name="permission_read_storage_rationale">是否允许访问本地文件</string>
+    <string name="permission_write_storage_rationale">是否允许修改本地文件</string>
+    <!-- 权限获取 end -->
+
 
     <!-- 宝贝寻家 -->
     <string name="baby_go_home">宝贝寻家</string>
     <string name="back">返回</string>
     <string name="open_camera_or_open_picure">拍照</string>
-    
+
     <string name="choose_picture">选择图形</string>
     <string name="do_something">操作</string>
     <string name="find_home">寻家</string>
 
     <string name="open_camera">打开相机</string>
     <string name="open_picture">打开相册</string>
-    <string name="cancal">取消</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
 
     <string name="road">道路</string>
     <string name="building">建筑</string>

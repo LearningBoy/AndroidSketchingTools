@@ -7,8 +7,7 @@
     <ImageView
         android:id="@+id/graphic_image"
         android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:layout_height="60dp"
-        android:adjustViewBounds="true" />
+        android:layout_margin="10dp" />
 </LinearLayout>

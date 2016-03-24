@@ -78,7 +78,7 @@ public class GridViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {
-            convertView = View.inflate(context, R.layout.graphoc_item, null);
+            convertView = View.inflate(context, R.layout.baby_home_graphic_item, null);
             imageView = (ImageView) convertView.findViewById(R.id.graphic_image);
             convertView.setTag(imageView);
         } else {

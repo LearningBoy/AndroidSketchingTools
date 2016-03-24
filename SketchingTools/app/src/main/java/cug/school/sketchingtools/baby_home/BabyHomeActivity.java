@@ -1,66 +1,78 @@
 package cug.school.sketchingtools.baby_home;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
 import cug.school.sketchingtools.R;
+import cug.school.sketchingtools.base.BaseActivity;
 import cug.school.sketchingtools.common.DrawSketchView;
 import cug.school.sketchingtools.common.GridViewAdapter;
 import cug.school.sketchingtools.common.XmlSave;
-import cug.school.sketchingtools.popwindows.PopWindowForPicture;
 
 /**
  * 宝贝寻家主界面
  */
-public class BabyHomeActivity extends Activity {
+public class BabyHomeActivity extends BaseActivity {
 
-    /**
-     * 打开相机、相册相关字段注释
-     */
-    private PopWindowForPicture popWindowForPicture; //相机、相册的PopWindow
-    private static final int OPEN_CAMERA_CODE = 10; //打开相机的返回码
-    private static final int OPEN_ALBUM_CODE = 11;  //打开相册时的返回码
+    private View popupView;
+    private PopupWindow popupWindow;
+    private static final int OPEN_CAMERA_CODE = 0x01;
+    private static final int OPEN_ALBUM_CODE = 0x02;
 
-    /**
-     * 图形选择按钮相关字段
-     */
     private TabHost tabHost;
     private Boolean TAG = false;
 
-    /**
-     * 操作按钮相关字段
-     */
     private LinearLayout operationLinearLayout;
-
-    /**
-     * 寻家按钮相关字段
-     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.baby_home_main_layout);
+        setContentView(R.layout.baby_home_layout);
         initView();
     }
 
     private void initView() {
+        popupView = LayoutInflater.from(this).inflate(R.layout.baby_home_popup_layout, null);
+        Button Open_Camera = (Button) popupView.findViewById(R.id.open_camera);
+        Open_Camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getImageFromCamera();
+            }
+        });
+        Button Open_Picture = (Button) popupView.findViewById(R.id.open_picture);
+        Open_Picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getImageFromAlbum();
+            }
+        });
+        Button Cancal = (Button) popupView.findViewById(R.id.cancal);
+        Cancal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
         //打开相机或者打开相册
         Button Open_Camera_Or_Picture = (Button) findViewById(R.id.open_camera_or_open_picture);
         Open_Camera_Or_Picture.setOnClickListener(new View.OnClickListener() {
@@ -77,10 +89,7 @@ public class BabyHomeActivity extends Activity {
                     }
                     TAG = false;
                 }
-                //实例化PopWindow
-                popWindowForPicture = new PopWindowForPicture(BabyHomeActivity.this, Camera_Album_itemsOnClick);
-                //显示窗口
-                popWindowForPicture.showAtLocation(BabyHomeActivity.this.findViewById(R.id.baby_home), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                getPopupWindow(popupView).showAtLocation(BabyHomeActivity.this.findViewById(R.id.baby_home), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         });
         //图形选择按钮
@@ -206,32 +215,28 @@ public class BabyHomeActivity extends Activity {
         });
     }
 
-    //拍照和相册按钮的点击事件
-    private View.OnClickListener Camera_Album_itemsOnClick = new View.OnClickListener() {
-
-        public void onClick(View v) {
-            popWindowForPicture.dismiss();
-            switch (v.getId()) {
-                case R.id.open_camera:
-                    getImageFromCamera();
-                    break;
-                case R.id.open_picture:
-                    getImageFromAlbum();
-                    break;
-                default:
-                    break;
-            }
+    private PopupWindow getPopupWindow(View view) {
+        if (popupWindow == null) {
+            popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            popupWindow.setAnimationStyle(R.style.popup_window_for_picture);
+            popupWindow.setFocusable(true);
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setBackgroundDrawable(new BitmapDrawable());
         }
-    };
+        return popupWindow;
+    }
 
     //从相机获得照片
     private void getImageFromCamera() {
+        popupWindow.dismiss();
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, OPEN_CAMERA_CODE);
     }
 
     //从相册获得照片
     private void getImageFromAlbum() {
+        popupWindow.dismiss();
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         //设置获得文件地址和类型
         intent.setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*");

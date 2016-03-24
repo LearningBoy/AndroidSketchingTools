@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -51,7 +52,7 @@ public class XmlSave {
             Element xmlTime = document.createElement("time");
             rootElement.appendChild(xmlTime);
             //获取系统当前时间
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日-HH:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日-HH:mm:ss", Locale.CHINA);
             Date curDate = new Date(System.currentTimeMillis());
             String currentTime = formatter.format(curDate);
             xmlTime.appendChild(document.createTextNode(currentTime));

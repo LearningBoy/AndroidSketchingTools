@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@color/white"
     android:padding="20dp">
 
     <Button
@@ -27,11 +28,11 @@
         android:id="@+id/cancal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/back_style"
-        android:text="@string/cancal"
+        android:text="@string/cancel"
         android:textSize="20sp" />
 
 </LinearLayout>
