@@ -1,4 +1,4 @@
-package cug.school.sketchingtools;
+package cug.school.sketching;
 
 import org.junit.Test;
 

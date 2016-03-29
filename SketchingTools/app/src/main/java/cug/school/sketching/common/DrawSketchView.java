@@ -1,4 +1,4 @@
-package cug.school.sketchingtools.common;
+package cug.school.sketching.common;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -225,4 +225,5 @@ public class DrawSketchView extends View {
     public ArrayList<ArrayList<Point>> getAllPoint() {
         return allPointArrayList;
     }
+
 }

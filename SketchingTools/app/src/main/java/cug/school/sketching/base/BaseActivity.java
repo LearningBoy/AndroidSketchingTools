@@ -1,4 +1,4 @@
-package cug.school.sketchingtools.base;
+package cug.school.sketching.base;
 
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -7,7 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
-import cug.school.sketchingtools.R;
+import cug.school.sketching.R;
 
 /**
  * Created by Mr_Bai on 2016/3/24.

@@ -1,29 +1,57 @@
 <resources>
 
-    <!-- 整体主题 -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <!-- 主题风格 start -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
+    </style>
+    <!-- 主题风格 end -->
+
+    <!-- 标题风格 start -->
+    <style name="ToolbarRl">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
-    <!-- -->
-    <style name="myTheme.actionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="actionBarSize">@dimen/actionBarSize</item>
+    <style name="Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbarSize</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
-    <!-- -->
-    <style name="myTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="actionBarTheme">@style/myTheme.actionBar</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="actionBarSize">@dimen/actionBarSize</item>
+    <style name="ToolbarTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- PopWindow动画 -->
-    <style name="popup_window_for_picture">
+    <style name="ToolbarLeft">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/toolbarSize</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginLeft">13dp</item>
+    </style>
+
+    <style name="ToolbarRight">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/toolbarSize</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginRight">13dp</item>
+    </style>
+    <!-- 主题风格 end -->
+
+    <!-- 弹出框动画 start -->
+    <style name="PopWindow">
         <item name="android:windowEnterAnimation">@anim/popup_window_show</item>
         <item name="android:windowExitAnimation">@anim/popup_window_hidden</item>
     </style>
+    <!-- 弹出框动画 end -->
 </resources>

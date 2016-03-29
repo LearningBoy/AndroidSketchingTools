@@ -1,4 +1,4 @@
-package cug.school.sketchingtools.common;
+package cug.school.sketching.common;
 
 import android.graphics.Point;
 
