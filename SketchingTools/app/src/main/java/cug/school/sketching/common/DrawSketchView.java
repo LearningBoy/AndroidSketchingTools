@@ -64,12 +64,13 @@ public class DrawSketchView extends View {
     public boolean onTouchEvent(MotionEvent event) {
 
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                path = new Path();
-                path.moveTo(event.getX(), event.getY());
-                break;
             case MotionEvent.ACTION_MOVE:
-                path.lineTo(event.getX(), event.getY());
+                if (path == null) {
+                    path = new Path();
+                    path.moveTo(event.getX(), event.getY());
+                } else {
+                    path.lineTo(event.getX(), event.getY());
+                }
                 Point point = new Point((int) event.getX(), (int) event.getY());
                 pointArrayList.add(point);
                 invalidate();
@@ -77,6 +78,7 @@ public class DrawSketchView extends View {
             case MotionEvent.ACTION_UP:
                 TAG = " ";
                 pathArrayList.add(path);
+                path = null;
                 ArrayList<Point> arrayList = new ArrayList<>();
                 arrayList.addAll(pointArrayList);
                 allPointArrayList.add(arrayList);

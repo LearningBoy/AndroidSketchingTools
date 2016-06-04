@@ -1,13 +1,13 @@
 package cug.school.sketching.home;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -15,7 +15,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,6 +30,8 @@ import java.io.File;
 import cug.school.sketching.R;
 import cug.school.sketching.base.BaseActivity;
 import cug.school.sketching.common.DrawSketchView;
+import cug.school.sketching.common.RecyclerViewAdapter;
+import cug.school.sketching.common.ResourceImage;
 import cug.school.sketching.common.XmlSave;
 
 /**
@@ -42,32 +43,18 @@ public class BabyHomeActivity extends BaseActivity {
     private PopupWindow popupWindow;
     private static final int REQUEST_OPEN_CAMERA = 0x01;
     private static final int REQUEST_OPEN_ALBUM = 0x02;
+
+    private DrawSketchView drawSketchView;
     private Uri mDestinationUri;
     private static final String CROPPED_IMAGE_NAME = "CropImage.png";
+    private TextView textView;
 
     private LinearLayout chooseGraphicLl;
     private RecyclerView recyclerView;
     private Boolean flag = false;
     private String tag = "road";
     private RecyclerViewAdapter adapter;
-    //道路图集
-    private Integer[] roadImages = {R.mipmap.road_01, R.mipmap.road_02,
-            R.mipmap.road_03, R.mipmap.road_04,
-            R.mipmap.road_05, R.mipmap.road_06,
-            R.mipmap.road_07, R.mipmap.road_08,
-            R.mipmap.road_09, R.mipmap.road_10};
-    //桥梁图集
-    private Integer[] bridgeImages = {R.mipmap.bridge_01, R.mipmap.bridge_02,
-            R.mipmap.bridge_03, R.mipmap.bridge_04,
-            R.mipmap.bridge_05, R.mipmap.bridge_06,
-            R.mipmap.bridge_07, R.mipmap.bridge_08,
-            R.mipmap.bridge_09};
-    //建筑图集
-    private Integer[] buildingImages = {R.mipmap.building_01, R.mipmap.building_02,
-            R.mipmap.building_03, R.mipmap.building_04,
-            R.mipmap.building_05, R.mipmap.building_06,
-            R.mipmap.building_07, R.mipmap.building_08,
-            R.mipmap.building_09, R.mipmap.building_10};
+    private ResourceImage resourceImage = ResourceImage.getResourceImageInstance();
 
     private LinearLayout operationLinearLayout;
 
@@ -82,6 +69,10 @@ public class BabyHomeActivity extends BaseActivity {
     }
 
     private void initView() {
+
+        drawSketchView = (DrawSketchView) findViewById(R.id.draw_view);
+        textView = (TextView) findViewById(R.id.dealing);
+
         popupView = LayoutInflater.from(this).inflate(R.layout.baby_home_popup_layout, null);
         LinearLayout Open_Camera = (LinearLayout) popupView.findViewById(R.id.open_camera);
         Open_Camera.setOnClickListener(new View.OnClickListener() {
@@ -150,57 +141,70 @@ public class BabyHomeActivity extends BaseActivity {
         });
 
         chooseGraphicLl = (LinearLayout) findViewById(R.id.choose_graphic_ll);
+        //选择道路
         TextView roadTv = (TextView) findViewById(R.id.road_tv);
         roadTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!tag.equals("road")) {
-                    adapter = new RecyclerViewAdapter(BabyHomeActivity.this, roadImages);
+                    adapter = new RecyclerViewAdapter(BabyHomeActivity.this, resourceImage.roadImages);
                     recyclerView.setAdapter(adapter);
                     tag = "road";
                 }
             }
         });
+        //选择桥梁
         TextView bridgeTv = (TextView) findViewById(R.id.bridge_tv);
         bridgeTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!tag.equals("bridge")) {
-                    adapter = new RecyclerViewAdapter(BabyHomeActivity.this, bridgeImages);
+                    adapter = new RecyclerViewAdapter(BabyHomeActivity.this, resourceImage.bridgeImages);
                     recyclerView.setAdapter(adapter);
                     tag = "bridge";
                 }
             }
         });
+        //选择建筑
         TextView buildingTv = (TextView) findViewById(R.id.building_tv);
         buildingTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!tag.equals("building")) {
-                    adapter = new RecyclerViewAdapter(BabyHomeActivity.this, buildingImages);
+                    adapter = new RecyclerViewAdapter(BabyHomeActivity.this, resourceImage.buildingImages);
                     recyclerView.setAdapter(adapter);
                     tag = "building";
                 }
             }
         });
+        //选择河流
         TextView riverTv = (TextView) findViewById(R.id.river_tv);
         riverTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (!tag.equals("river")) {
+                    adapter = new RecyclerViewAdapter(BabyHomeActivity.this, resourceImage.riverImages);
+                    recyclerView.setAdapter(adapter);
+                    tag = "river";
+                }
             }
         });
+        //选择自定义
         TextView designTv = (TextView) findViewById(R.id.design_tv);
         designTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (!tag.equals("design")) {
+                    adapter = new RecyclerViewAdapter(BabyHomeActivity.this, resourceImage.designImages);
+                    recyclerView.setAdapter(adapter);
+                    tag = "design";
+                }
             }
         });
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 5);
         recyclerView.setLayoutManager(gridLayoutManager);
-        adapter = new RecyclerViewAdapter(this, roadImages);
+        adapter = new RecyclerViewAdapter(this, resourceImage.roadImages);
         recyclerView.setAdapter(adapter);
 
         //操作按钮
@@ -234,7 +238,7 @@ public class BabyHomeActivity extends BaseActivity {
         undoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((DrawSketchView) findViewById(R.id.draw_view)).unDo();
+                drawSketchView.unDo();
             }
         });
         //重置
@@ -242,7 +246,7 @@ public class BabyHomeActivity extends BaseActivity {
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((DrawSketchView) findViewById(R.id.draw_view)).reSet();
+                drawSketchView.reSet();
             }
         });
         //寻家
@@ -252,7 +256,7 @@ public class BabyHomeActivity extends BaseActivity {
             public void onClick(View v) {
                 TextView XmlContentView = (TextView) findViewById(R.id.xml_content);
                 XmlSave xmlSave = new XmlSave();
-                XmlContentView.setText(xmlSave.Save_as_XmlString(1, "123456", "test", ((DrawSketchView) findViewById(R.id.draw_view)).getAllPoint()));
+                XmlContentView.setText(xmlSave.Save_as_XmlString(1, "123456", "test", drawSketchView.getAllPoint()));
                 int i = XmlContentView.getVisibility();
                 switch (i) {
                     case View.VISIBLE:
@@ -264,6 +268,23 @@ public class BabyHomeActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    public void getRecyclerViewItem(String string) {
+        switch (tag) {
+            case "road":
+                break;
+            case "bridge":
+                break;
+            case "building":
+                break;
+            case "river":
+                break;
+            case "design":
+                break;
+            default:
+                break;
+        }
     }
 
     private PopupWindow getPopupWindow(View view) {
@@ -291,9 +312,9 @@ public class BabyHomeActivity extends BaseActivity {
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 Uri resultUri = UCrop.getOutput(data);
                 if (resultUri != null) {
-                    ((DrawSketchView) findViewById(R.id.draw_view)).Recycle();
+                    drawSketchView.Recycle();
                     String picture_path = getRealPicturePath(resultUri);
-                    ((DrawSketchView) findViewById(R.id.draw_view)).setBitmap(compressBitmap(findViewById(R.id.draw_view), picture_path));
+                    drawSketchView.setBitmap(compressBitmap(drawSketchView, picture_path));
                 } else {
                     Toast.makeText(this, "裁剪失败", Toast.LENGTH_SHORT).show();
                 }
@@ -356,47 +377,125 @@ public class BabyHomeActivity extends BaseActivity {
         options.inSampleSize = Math.max(Bitmap_Width / View_Width, Bitmap_Height / View_Height);
         //inJustDecodeBounds设置为false，加载Bitmap到内存中
         options.inJustDecodeBounds = false;
+        ImageAsyncTask imageAsyncTask = new ImageAsyncTask();
+        imageAsyncTask.execute(BitmapFactory.decodeFile(path, options));
         return BitmapFactory.decodeFile(path, options);
     }
 
-    class RecyclerViewAdapter extends RecyclerView.Adapter {
+    //异步处理图像的灰度化
+    class ImageAsyncTask extends AsyncTask<Bitmap, Integer, Bitmap> {
 
-        private Context context;
-        private Integer[] ids;
-
-        public RecyclerViewAdapter(Context context, Integer[] ids) {
-            this.context = context;
-            this.ids = ids;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            textView.setVisibility(View.VISIBLE);
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(context).inflate(R.layout.baby_home_graphic_item, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.bindData(ids[position]);
-        }
-
-        @Override
-        public int getItemCount() {
-            return ids.length;
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.graphic_image);
-
-            public ViewHolder(View itemView) {
-                super(itemView);
+        protected Bitmap doInBackground(Bitmap[] params) {
+            int width, height;
+            height = params[0].getHeight();
+            width = params[0].getWidth();
+            int[] colorArray = new int[height * width];
+            int[] grayArray = new int[height * width];
+            params[0].getPixels(colorArray, 0, width, 0, 0, width, height);
+            int n = 0;
+            //gray
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    int red = (colorArray[n] >> 16) & 0xff;
+                    int green = (colorArray[n] >> 8) & 0xff;
+                    int blue = colorArray[n] & 0xff;
+                    if (red == green && green == blue) {
+                        grayArray[n] = red;
+                        n++;
+                    } else {
+                        int gray = (red + green + blue) / 3;
+                        grayArray[n] = gray;
+                        colorArray[n] = 0xff000000 | (gray << 16) | (gray << 8) | gray;
+                        n++;
+                    }
+                }
             }
-
-            public void bindData(int id) {
-                imageView.setImageResource(id);
+            //gauss
+            for (int i = 1; i < height - 1; i++) {
+                for (int j = 1; j < width - 1; j++) {
+                    double gray_i_1_j_1 = 0.0751 * grayArray[width * (i - 1) + (j - 1)];
+                    double gray_i_j_1 = 0.1238 * grayArray[width * (i - 1) + j];
+                    double gray_i1_j_1 = 0.0751 * grayArray[width * (i - 1) + (j + 1)];
+                    double gray_i_1_j = 0.1238 * grayArray[width * i + (j - 1)];
+                    double gray_i_j = 0.2043 * grayArray[width * i + j];
+                    double gray_i1_j = 0.1238 * grayArray[width * i + (j + 1)];
+                    double gray_i_1_j1 = 0.0751 * grayArray[width * (i + 1) + (j - 1)];
+                    double gray_i_j1 = 0.1238 * grayArray[width * (i + 1) + j];
+                    double gray_i1_j1 = 0.0751 * grayArray[width * (i + 1) + (j + 1)];
+                    int gray = (int) (gray_i_1_j_1 + gray_i_j_1 + gray_i1_j_1 + gray_i_1_j + gray_i_j
+                            + gray_i1_j + gray_i_1_j1 + gray_i_j1 + gray_i1_j1);
+                    grayArray[width * i + j] = gray;
+                    colorArray[width * i + j] = 0xff000000 | (gray << 16) | (gray << 8) | gray;
+                }
             }
+            //幅值与梯度
+            double[] M = new double[width * height];
+            double[] O = new double[width * height];
+            for (int i = 0; i < height - 1; i++) {
+                for (int j = 0; j < width - 1; j++) {
+                    int G_x_i_j = (grayArray[width * i + j] - grayArray[width * (i + 1) + j]) / 2
+                            + (grayArray[width * i + j + 1] - grayArray[width * (i + 1) + j + 1]) / 2;
+                    int G_y_i_j = (grayArray[width * i + j] - grayArray[width * (i) + j + 1]) / 2
+                            + (grayArray[width * (i + 1) + j] - grayArray[width * (i + 1) + j + 1]) / 2;
+                    double M_i_j = Math.sqrt(G_x_i_j * G_x_i_j + G_y_i_j * G_y_i_j);
+                    M[width * i + j] = M_i_j;
+                    if (G_y_i_j != 0) {
+                        double O_i_j = Math.atan(G_x_i_j / G_y_i_j);
+                        O[width * i + j] = O_i_j;
+                    } else {
+                        O[width * i + j] = 0;
+                    }
+                }
+            }
+            //非极大值抑制
+            for (int i = 1; i < height - 1; i++) {
+                for (int j = 1; j < width - 1; j++) {
+                    if (O[width * i + j] == 0) {
+                        if (O[width * (i - 1) + j - 1] == 0 && O[width * (i - 1) + j] == 0
+                                && O[width * i + j - 1] == 0) {
+                            grayArray[width * i + j] = 255;
+                            colorArray[width * i + j] = 0xff000000 | (255 << 16) | (255 << 8) | 255;
+                        }
+                    }
+                }
+            }
+            //双阀值
+            for (int i = 1; i < height; i++) {
+                for (int j = 1; j < width; j++) {
+                    if (grayArray[width * i + j] > 90) {
+                        if (grayArray[width * i + j] >= 180) {
+                            grayArray[width * i + j] = 255;
+                            colorArray[width * i + j] = 0xff000000 | (255 << 16) | (255 << 8) | 255;
+                        } else {
+                            if (grayArray[width * (i - 1) + j - 1] >= 180 && grayArray[width * (i - 1) + j] >= 180
+                                    && grayArray[width * i + j - 1] >= 180) {
+                                grayArray[width * i + j] = 255;
+                                colorArray[width * i + j] = 0xff000000 | (255 << 16) | (255 << 8) | 255;
+                            }
+                        }
+                    }
+                }
+            }
+            // Change bitmap to use new array
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            bitmap.setPixels(colorArray, 0, width, 0, 0, width, height);
+            params[0] = null;
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap o) {
+            super.onPostExecute(o);
+            textView.setVisibility(View.GONE);
+            drawSketchView.Recycle();
+            drawSketchView.setBitmap(o);
         }
     }
 }

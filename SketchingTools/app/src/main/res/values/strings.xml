@@ -12,6 +12,8 @@
     <string name="baby_go_home">宝贝寻家</string>
     <string name="back">返回</string>
 
+    <string name="dealing">正在处理...</string>
+
     <string name="choose_picture">选择图形</string>
     <string name="operation">操作</string>
     <string name="find_home">寻家</string>
